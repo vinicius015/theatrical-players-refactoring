@@ -1,0 +1,5 @@
+﻿Statement for TragedyOnly
+  Hamlet: $500.00 (40 seats)
+  Othello: $450.00 (35 seats)
+Amount owed is $950.00
+You earned 15 credits
