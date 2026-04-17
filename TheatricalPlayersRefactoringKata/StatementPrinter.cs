@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using TheatricalPlayersRefactoringKata.Domain;
 using TheatricalPlayersRefactoringKata.Models;
@@ -10,6 +9,7 @@ namespace TheatricalPlayersRefactoringKata
     {
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
+            var totalCalculator = new TotalCalculator(0);
             var totalAmount = 0;
             var volumeCredits = 0;
             var result = $"Statement for {invoice.Customer}\n";
@@ -22,11 +22,15 @@ namespace TheatricalPlayersRefactoringKata
                 var thisAmount = calculator.Amount();
                 volumeCredits += calculator.VolumeCredits();
 
-                result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(thisAmount / 100), perf.Audience);
+                totalCalculator = new TotalCalculator(thisAmount);
+                result += $"  {play.Name}: {totalCalculator.FormattedAmount(cultureInfo)} ({perf.Audience} seats)\n";
                 totalAmount += thisAmount;
             }
-            result += string.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
+
+            totalCalculator = new TotalCalculator(totalAmount);
+            result += $"Amount owed is {totalCalculator.FormattedAmount(cultureInfo)}\n";
             result += $"You earned {volumeCredits} credits\n";
+
             return result;
         }
     }
